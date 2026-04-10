@@ -15,6 +15,25 @@ export default function Home() {
   const [description, setDescription] = useState('')
   const [dragOver, setDragOver] = useState(false)
 
+  useEffect(() => {
+    if (window.location.hash === '#upload') {
+      setView('upload')
+    } else {
+      setView('gallery')
+    }
+
+    const handleHashChange = () => {
+      if (window.location.hash === '#upload') {
+        setView('upload')
+      } else {
+        setView('gallery')
+      }
+    }
+
+    window.addEventListener('hashchange', handleHashChange)
+    return () => window.removeEventListener('hashchange', handleHashChange)
+  }, [])
+
   const fetchItems = useCallback(async () => {
     try {
       const res = await fetch('/api/portfolio')
@@ -85,7 +104,10 @@ export default function Home() {
       setDescription('')
       fetchItems()
 
-      setTimeout(() => setView('gallery'), 1500)
+      setTimeout(() => {
+        window.location.hash = ''
+        setView('gallery')
+      }, 1500)
     } catch (err) {
       setStatus({ type: 'error', text: err.message })
     } finally {
@@ -124,7 +146,10 @@ export default function Home() {
       <nav className="site-nav">
         <button
           className={view === 'gallery' ? 'active' : ''}
-          onClick={() => setView('gallery')}
+          onClick={() => {
+            window.location.hash = ''
+            setView('gallery')
+          }}
         >
           Gallery
         </button>
