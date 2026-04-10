@@ -128,12 +128,6 @@ export default function Home() {
         >
           Gallery
         </button>
-        <button
-          className={view === 'upload' ? 'active' : ''}
-          onClick={() => setView('upload')}
-        >
-          Upload
-        </button>
       </nav>
 
       <main>
@@ -198,7 +192,10 @@ export default function Home() {
                 {!preview ? (
                   <div
                     className={`upload-area ${dragOver ? 'drag-over' : ''}`}
-                    onDragOver={(e) => { e.preventDefault(); setDragOver(true) }}
+                    onDragOver={(e) => {
+                      e.preventDefault()
+                      setDragOver(true)
+                    }}
                     onDragLeave={() => setDragOver(false)}
                     onDrop={handleDrop}
                     onClick={() => document.getElementById('file-input').click()}
@@ -257,7 +254,12 @@ export default function Home() {
                   <button
                     type="button"
                     className="btn-primary"
-                    style={{ marginTop: '0.75rem', background: 'transparent', border: '1px solid var(--dark-mid)', color: 'var(--gray)' }}
+                    style={{
+                      marginTop: '0.75rem',
+                      background: 'transparent',
+                      border: '1px solid var(--dark-mid)',
+                      color: 'var(--gray)',
+                    }}
                     onClick={() => {
                       setFile(null)
                       setPreview(null)
