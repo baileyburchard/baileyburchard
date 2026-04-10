@@ -126,14 +126,7 @@ export default function Home() {
           className={view === 'gallery' ? 'active' : ''}
           onClick={() => setView('gallery')}
         >
-          Gallery
-        </button>
-        <button
-          className={view === 'upload' ? 'active' : ''}
-          onClick={() => setView('upload')}
-        >
-          Upload
-        </button>
+
       </nav>
 
       <main>
