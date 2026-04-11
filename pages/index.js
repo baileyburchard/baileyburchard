@@ -7,6 +7,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
   const [uploading, setUploading] = useState(false)
   const [status, setStatus] = useState(null)
+  const [selectedItem, setSelectedItem] = useState(null)
 
   // Upload form state
   const [file, setFile] = useState(null)
@@ -32,6 +33,17 @@ export default function Home() {
 
     window.addEventListener('hashchange', handleHashChange)
     return () => window.removeEventListener('hashchange', handleHashChange)
+  }, [])
+
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        setSelectedItem(null)
+      }
+    }
+
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
   }, [])
 
   const fetchItems = useCallback(async () => {
@@ -115,21 +127,6 @@ export default function Home() {
     }
   }
 
-  const handleDelete = async (id) => {
-    if (!confirm('Remove this piece from your portfolio?')) return
-
-    try {
-      const res = await fetch(`/api/portfolio?id=${encodeURIComponent(id)}`, {
-        method: 'DELETE',
-      })
-      if (res.ok) {
-        setItems(items.filter((item) => item.id !== id))
-      }
-    } catch {
-      console.error('Failed to delete item')
-    }
-  }
-
   return (
     <div className="page-wrapper">
       <Head>
@@ -176,19 +173,17 @@ export default function Home() {
             ) : (
               <div className="gallery-grid">
                 {items.map((item) => (
-                  <div key={item.id} className="gallery-item">
+                  <div
+                    key={item.id}
+                    className="gallery-item"
+                    onClick={() => setSelectedItem(item)}
+                    style={{ cursor: 'pointer' }}
+                  >
                     <img
                       src={`/api/images/${encodeURIComponent(item.imageKey)}`}
                       alt={item.title}
                       loading="lazy"
                     />
-                    <button
-                      className="delete-btn"
-                      onClick={() => handleDelete(item.id)}
-                      title="Remove"
-                    >
-                      &times;
-                    </button>
                     <div className="item-info">
                       <h3>{item.title}</h3>
                       {item.description && <p>{item.description}</p>}
@@ -298,6 +293,63 @@ export default function Home() {
           </>
         )}
       </main>
+
+      {selectedItem && (
+        <div
+          onClick={() => setSelectedItem(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0, 0, 0, 0.92)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '2rem',
+            zIndex: 9999,
+          }}
+        >
+          <button
+            onClick={() => setSelectedItem(null)}
+            style={{
+              position: 'absolute',
+              top: '1.5rem',
+              right: '1.5rem',
+              background: 'transparent',
+              border: 'none',
+              color: '#fff',
+              fontSize: '2rem',
+              cursor: 'pointer',
+            }}
+            aria-label="Close image"
+          >
+            &times;
+          </button>
+
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: '95vw',
+              maxHeight: '95vh',
+              textAlign: 'center',
+            }}
+          >
+            <img
+              src={`/api/images/${encodeURIComponent(selectedItem.imageKey)}`}
+              alt={selectedItem.title}
+              style={{
+                maxWidth: '100%',
+                maxHeight: '80vh',
+                objectFit: 'contain',
+                borderRadius: '12px',
+              }}
+            />
+            <div style={{ marginTop: '1rem', color: '#fff' }}>
+              <h3 style={{ marginBottom: '0.5rem' }}>{selectedItem.title}</h3>
+              {selectedItem.description && <p>{selectedItem.description}</p>}
+            </div>
+          </div>
+        </div>
+      )}
 
       <footer className="site-footer">
         <div className="footer-deco">&#9670; &#9670; &#9670;</div>
