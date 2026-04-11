@@ -137,7 +137,7 @@ export default function Home() {
 
       <header className="site-header">
         <h1>Portfolio</h1>
-        <p className="tagline">A curated collection of work</p>
+        <p className="tagline">Bailey Burchard</p>
       </header>
 
       <nav className="site-nav">
