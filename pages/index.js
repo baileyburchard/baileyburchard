@@ -131,7 +131,7 @@ export default function Home() {
     <div className="page-wrapper">
       <Head>
         <title>Portfolio</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/PFP.png" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
